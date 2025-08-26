@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembelajaran Informatika Kelas 9 - TIK</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- DESIGN SYSTEM & GLOBAL STYLES --- */
+        :root {
+            --bg-dark: #1a1a2e;
+            --primary: #16213e;
+            --secondary: #0f3460;
+            --accent-red: #e94560;
+            --accent-purple: #9a4ef1;
+            --accent-yellow: #feca57;
+            --text-light: #e0e0e0;
+            --text-dark: #1a1a2e;
+            --glow-color: var(--accent-yellow);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            transition: margin-left 0.3s ease;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            color: var(--accent-red);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes glowing {
+            0% { box-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color); }
+            50% { box-shadow: 0 0 20px var(--glow-color), 0 0 30px var(--glow-color); }
+            100% { box-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- SIDEBAR NAVIGATION --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--primary), var(--bg-dark));
+            border-right: 2px solid var(--accent-purple);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+            z-index: 2000;
+            overflow-y: auto;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--secondary);
+        }
+
+        .sidebar-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-yellow);
+            box-shadow: 0 0 15px var(--accent-yellow);
+            transition: transform 0.3s ease;
+        }
+        .sidebar-header img:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .sidebar-header h3 {
+            color: var(--text-light);
+            margin-top: 10px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .sidebar-nav li a, .sidebar-nav li .submenu-toggle {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .sidebar-nav li a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-nav li a:hover, .sidebar-nav li .submenu-toggle:hover {
+            background-color: var(--secondary);
+            color: var(--accent-yellow);
+            transform: translateX(5px);
+        }
+
+        .sidebar-nav li a.active {
+            background: var(--accent-red);
+            color: white;
+            border-left: 5px solid var(--accent-yellow);
+        }
+
+        /* Submenu */
+        .submenu {
+            list-style: none;
+            background-color: var(--bg-dark);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+        .submenu-toggle .fa-chevron-down {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+        .submenu-toggle.open .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        .submenu li a {
+            padding-left: 50px;
+        }
+
+        .copyright {
+            padding: 20px;
+            font-size: 0.8em;
+            text-align: center;
+            color: #aaa;
+            margin-top: auto;
+        }
+        
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex-grow: 1;
+            padding-left: 260px;
+            transition: padding-left 0.3s ease-in-out;
+        }
+        .main-content.full-width {
+            padding-left: 0;
+        }
+        
+        .header {
+            position: sticky;
+            top: 0;
+            left: 260px;
+            right: 0;
+            background: rgba(22, 33, 62, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            transition: left 0.3s ease-in-out;
+        }
+        .header.full-width {
+            left: 0;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s, transform 0.3s;
+        }
+        .menu-toggle:hover {
+            color: var(--accent-yellow);
+            transform: rotate(90deg);
+        }
+
+        #page-title {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .page {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .page.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--primary);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid var(--secondary);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, var(--accent-red), var(--accent-purple));
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-red);
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px var(--accent-red), 0 0 30px var(--accent-purple);
+            animation: glowing 1.5s infinite;
+        }
+
+        /* --- BERANDA PAGE --- */
+        #beranda .hero {
+            text-align: center;
+            padding: 50px 0;
+        }
+        #beranda .hero img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid var(--accent-purple);
+            box-shadow: 0 0 25px var(--accent-purple);
+            animation: glowing 2s infinite alternate;
+            --glow-color: var(--accent-purple);
+        }
+        #beranda .hero h1 {
+            font-size: 2.8rem;
+            margin-top: 20px;
+            background: linear-gradient(45deg, var(--accent-red), var(--accent-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #beranda .hero p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            color: #ccc;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        .menu-card {
+            background: var(--secondary);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .menu-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 20px var(--accent-yellow);
+        }
+        .menu-card i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--accent-yellow), var(--accent-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .menu-card h3 {
+            color: var(--text-light);
+            font-size: 1.3rem;
+        }
+
+        /* --- MATERI PAGE --- */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- KUIS PAGE --- */
+        #kuis-registrasi, #kuis-container, #kuis-hasil {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 1px solid var(--secondary);
+            border-radius: 8px;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        #kuis-container { display: none; }
+        #kuis-hasil { display: none; text-align: center; }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: var(--secondary);
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-yellow), var(--accent-red));
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        #timer {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-yellow);
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            text-align: left;
+            background: var(--secondary);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .option-btn:hover {
+            border-color: var(--accent-purple);
+        }
+        .option-btn.selected {
+            background-color: var(--accent-purple);
+            border-color: var(--accent-yellow);
+        }
+        .option-btn.correct { background-color: #2ecc71; }
+        .option-btn.incorrect { background-color: #e74c3c; }
+
+        /* --- PAPAN PERINGKAT PAGE --- */
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .podium-item {
+            text-align: center;
+            width: 120px;
+        }
+        .podium-item .rank {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        .podium-item .name {
+            font-weight: 600;
+            margin-top: 5px;
+            word-wrap: break-word;
+        }
+        .podium-item .score {
+            font-size: 1.2rem;
+            color: var(--accent-yellow);
+        }
+        .podium-item .bar {
+            background: linear-gradient(180deg, var(--accent-purple), var(--accent-red));
+            border-radius: 10px 10px 0 0;
+            margin-top: 10px;
+            box-shadow: 0 0 15px var(--accent-purple);
+        }
+        .podium-item.rank-1 .bar { height: 200px; background: linear-gradient(180deg, var(--accent-yellow), var(--accent-red)); box-shadow: 0 0 20px var(--accent-yellow); }
+        .podium-item.rank-2 .bar { height: 150px; }
+        .podium-item.rank-3 .bar { height: 100px; }
+
+        #leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        #leaderboard-table th, #leaderboard-table td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        #leaderboard-table thead {
+            background-color: var(--secondary);
+        }
+        #leaderboard-table tbody tr {
+            border-bottom: 1px solid var(--secondary);
+        }
+        #leaderboard-table tbody tr:hover {
+            background-color: var(--primary);
+        }
+
+        /* --- GAMES STYLES --- */
+        .game-container {
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+        .game-container p {
+            margin-bottom: 20px;
+        }
+        .game-card {
+            background: var(--secondary);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .feedback {
+            margin-top: 15px;
+            font-weight: 600;
+        }
+        .feedback.correct { color: #2ecc71; }
+        .feedback.incorrect { color: #e74c3c; }
+
+        /* Game 1: Search Query Builder */
+        #game1-search-bar {
+            min-height: 50px;
+            background: var(--bg-dark);
+            border: 2px dashed var(--accent-purple);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        #game1-blocks-container {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .draggable-block {
+            padding: 10px 15px;
+            background: var(--primary);
+            border: 1px solid var(--accent-yellow);
+            border-radius: 8px;
+            cursor: grab;
+            user-select: none;
+        }
+        
+        /* Game 2: Shortcut Quiz */
+        #game2-options .option-btn {
+            text-align: center;
+        }
+
+        /* Game 3: Content Creator Sim */
+        #game3-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #game3-choices .choice-btn {
+            background: var(--secondary);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 15px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        #game3-choices .choice-btn:hover {
+            border-color: var(--accent-purple);
+        }
+
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.collapsed {
+                transform: translateX(0);
+            }
+            .main-content, .header {
+                padding-left: 0;
+                left: 0;
+            }
+            #page-title {
+                font-size: 1.2rem;
+            }
+            .podium {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        /* Overlay for mobile */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+        }
+        .overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="https://raw.githubusercontent.com/xiroro-ab/aris-bermansyah-komponen-sistem-komputer/refs/heads/main/IMG_7135.jpg" alt="Foto Profil">
+            <h3>Aris Bermansyah</h3>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="#beranda" class="nav-link active"><i class="fas fa-home"></i> Beranda</a></li>
+            <li>
+                <div class="submenu-toggle"><i class="fas fa-book"></i> Materi <i class="fas fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#materi1" class="nav-link"><i class="fas fa-search"></i> Materi 1</a></li>
+                    <li><a href="#materi2" class="nav-link"><i class="fas fa-file-alt"></i> Materi 2</a></li>
+                    <li><a href="#materi3" class="nav-link"><i class="fas fa-blog"></i> Materi 3</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="submenu-toggle"><i class="fas fa-pen-to-square"></i> Kuis & Peringkat <i class="fas fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#kuis" class="nav-link"><i class="fas fa-question-circle"></i> Mulai Kuis</a></li>
+                    <li><a href="#peringkat" class="nav-link"><i class="fas fa-trophy"></i> Lihat Peringkat</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="submenu-toggle"><i class="fas fa-gamepad"></i> Games <i class="fas fa-chevron-down"></i></div>
+                <ul class="submenu">
+                    <li><a href="#game1" class="nav-link"><i class="fas fa-puzzle-piece"></i> Perakit Kueri</a></li>
+                    <li><a href="#game2" class="nav-link"><i class="fas fa-keyboard"></i> Jagoan Shortcut</a></li>
+                    <li><a href="#game3" class="nav-link"><i class="fas fa-network-wired"></i> Simulator Konten</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="copyright">
+            &copy; 2025 Aris Bermansyah, S.Kom
+        </div>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <header class="header" id="header">
+            <button class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></button>
+            <h1 id="page-title">Beranda</h1>
+        </header>
+
+        <main>
+            <!-- BERANDA -->
+            <section id="beranda" class="page active">
+                <div class="card hero">
+                    <img src="https://raw.githubusercontent.com/xiroro-ab/aris-bermansyah-komponen-sistem-komputer/refs/heads/main/IMG_7135.jpg" alt="Foto Profil">
+                    <h1>Selamat Datang di Portal Pembelajaran TIK</h1>
+                    <p>Materi Teknologi Informasi dan Komunikasi untuk Kelas 9</p>
+                </div>
+                <div class="menu-grid">
+                    <div class="menu-card" data-target="materi1">
+                        <i class="fas fa-book-open"></i>
+                        <h3>Materi Pembelajaran</h3>
+                    </div>
+                    <div class="menu-card" data-target="kuis">
+                        <i class="fas fa-pen-nib"></i>
+                        <h3>Kerjakan Kuis</h3>
+                    </div>
+                    <div class="menu-card" data-target="peringkat">
+                        <i class="fas fa-medal"></i>
+                        <h3>Lihat Peringkat</h3>
+                    </div>
+                    <div class="menu-card" data-target="game1">
+                        <i class="fas fa-dice-d6"></i>
+                        <h3>Mainkan Game</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MATERI 1 -->
+            <section id="materi1" class="page">
+                <div class="card">
+                    <h2>Materi 1: Optimalisasi Penggunaan Mesin Pencarian</h2>
+                    <p>Pelajari cara menggunakan mesin pencari seperti Google secara efektif untuk menemukan informasi yang akurat dan relevan dengan cepat. Kuasai teknik pencarian lanjutan untuk kebutuhan akademis dan sehari-hari.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/hKtBmJCEBrg?si=EjgWvoFqP6UdMeQ0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MATERI 2 -->
+            <section id="materi2" class="page">
+                <div class="card">
+                    <h2>Materi 2: Aplikasi Perkantoran</h2>
+                    <p>Video ini akan membahas pemanfaatan aplikasi pengolah kata, gambar, dan presentasi untuk mendukung pekerjaan perkantoran. Anda akan belajar membuat dokumen, mengedit gambar, dan menyusun presentasi yang profesional.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/JopvLS4w16s?si=b16cVoTgCdPw2ETR" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MATERI 3 -->
+            <section id="materi3" class="page">
+                <div class="card">
+                    <h2>Materi 3: Pemanfaatan Blog & Vlog</h2>
+                    <p>Temukan cara membuat dan mengelola blog atau vlog untuk berbagi informasi dan ide. Pelajari dasar-dasar pembuatan konten digital yang menarik dan informatif.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/9hss6cMNTx0?si=OONcPHf1u3Ll4aDJ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                     <div class="video-container" style="margin-top:20px;">
+                        <iframe src="https://www.youtube.com/embed/VYI0IFD-Jw0?si=MaR5jYsTXEwxcHhQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </section>
+
+            <!-- KUIS -->
+            <section id="kuis" class="page">
+                <div class="card" id="kuis-registrasi">
+                    <h2>Registrasi Kuis</h2>
+                    <form id="form-registrasi">
+                        <div class="form-group">
+                            <label for="nama">Nama Lengkap</label>
+                            <input type="text" id="nama" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="kelas">Kelas</label>
+                            <select id="kelas" required>
+                                <option value="">Pilih Kelas</option>
+                                <option value="9.1">9.1</option>
+                                <option value="9.2">9.2</option>
+                                <option value="9.3">9.3</option>
+                                <option value="9.4">9.4</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="token">Token</label>
+                            <input type="password" id="token" required>
+                        </div>
+                        <button type="submit" class="btn">Mulai Kuis</button>
+                    </form>
+                </div>
+
+                <div class="card" id="kuis-container">
+                    <div class="progress-bar-container">
+                        <div id="progress-bar"></div>
+                    </div>
+                    <div id="timer">02:00</div>
+                    <h3 id="question-text"></h3>
+                    <div id="options-container"></div>
+                    <button id="next-btn" class="btn" style="margin-top: 20px;">Selanjutnya</button>
+                </div>
+
+                <div class="card" id="kuis-hasil">
+                    <h2>Hasil Kuis</h2>
+                    <p>Selamat, <span id="hasil-nama"></span>!</p>
+                    <p>Skor Akhir Anda:</p>
+                    <h1 id="hasil-skor" style="font-size: 4rem; margin: 20px 0;"></h1>
+                    <div style="display: flex; justify-content: center; gap: 15px;">
+                        <button id="ulang-kuis-btn" class="btn">Kerjakan Ulang</button>
+                        <button id="lihat-peringkat-btn" class="btn">Lihat Peringkat</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAPAN PERINGKAT -->
+            <section id="peringkat" class="page">
+                <div class="card">
+                    <h2>Papan Peringkat Teratas</h2>
+                    <div id="podium-container" class="podium">
+                        <!-- Podium items will be generated by JS -->
+                    </div>
+                    <table id="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Peringkat</th>
+                                <th>Nama</th>
+                                <th>Kelas</th>
+                                <th>Skor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body">
+                            <!-- Leaderboard data will be generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- GAME 1 -->
+            <section id="game1" class="page">
+                <div class="card game-container">
+                    <h2>Game: Perakit Kueri Pencarian</h2>
+                    <p>Seret dan susun blok di bawah ini ke dalam kotak pencarian untuk membentuk kueri yang benar sesuai pertanyaan.</p>
+                    <div class="game-card">
+                        <p id="game1-question">Pertanyaan akan muncul di sini.</p>
+                    </div>
+                    <div id="game1-search-bar"></div>
+                    <div id="game1-blocks-container"></div>
+                    <div style="margin-top: 20px;">
+                        <button id="game1-check-btn" class="btn">Periksa</button>
+                        <button id="game1-next-btn" class="btn" style="display: none;">Lanjut</button>
+                    </div>
+                    <p id="game1-feedback" class="feedback"></p>
+                </div>
+            </section>
+
+            <!-- GAME 2 -->
+            <section id="game2" class="page">
+                <div class="card game-container">
+                    <h2>Game: Jagoan Shortcut</h2>
+                    <p>Pilih kombinasi tombol shortcut yang tepat untuk perintah yang ditampilkan.</p>
+                    <div class="game-card">
+                        <p id="game2-question">Perintah akan muncul di sini.</p>
+                    </div>
+                    <div id="game2-options"></div>
+                    <p id="game2-feedback" class="feedback"></p>
+                </div>
+            </section>
+
+            <!-- GAME 3 -->
+            <section id="game3" class="page">
+                <div class="card game-container">
+                    <h2>Game: Simulator Konten Kreator</h2>
+                    <p>Ambil keputusan terbaik untuk membuat vlog Anda sukses dan disukai banyak orang!</p>
+                    <div class="game-card">
+                        <p id="game3-scenario-text">Skenario akan muncul di sini.</p>
+                    </div>
+                    <div id="game3-choices"></div>
+                    <p id="game3-feedback" class="feedback"></p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- VARIABLES ---
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const header = document.getElementById('header');
+        const menuToggle = document.getElementById('menu-toggle');
+        const overlay = document.getElementById('overlay');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pageTitle = document.getElementById('page-title');
+        const pages = document.querySelectorAll('.page');
+        const submenuToggles = document.querySelectorAll('.submenu-toggle');
+        const menuCards = document.querySelectorAll('.menu-card');
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz8wmCHslqo-Y5SooXVxC34YNnZrR_GdLRSLn5zHKKwddf66vgD2_TqcwK2ft91HAhE/exec";
+        
+        // --- KUIS VARIABLES ---
+        const formRegistrasi = document.getElementById('form-registrasi');
+        const kuisRegistrasi = document.getElementById('kuis-registrasi');
+        const kuisContainer = document.getElementById('kuis-container');
+        const kuisHasil = document.getElementById('kuis-hasil');
+        const progressBar = document.getElementById('progress-bar');
+        const timerEl = document.getElementById('timer');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const nextBtn = document.getElementById('next-btn');
+        const ulangKuisBtn = document.getElementById('ulang-kuis-btn');
+        const lihatPeringkatBtn = document.getElementById('lihat-peringkat-btn');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 120; // 2 minutes
+        let userAnswers = [];
+        let userData = {};
+
+        const questions = [
+            {
+                question: "Teknik pencarian yang menggunakan tanda minus (-) di depan sebuah kata bertujuan untuk...",
+                options: ["Mencari kata tersebut sebagai prioritas", "Mengecualikan kata tersebut dari hasil pencarian", "Hanya mencari di situs tertentu", "Mencari sinonim dari kata tersebut"],
+                answer: "Mengecualikan kata tersebut dari hasil pencarian"
+            },
+            {
+                question: "Untuk mencari frasa yang sama persis di Google, simbol apa yang harus Anda gunakan di sekitar frasa tersebut?",
+                options: ["Tanda kurung ()", "Tanda kutip \"\"", "Tanda bintang *", "Tanda hubung -"],
+                answer: "Tanda kutip \"\""
+            },
+            {
+                question: "Aplikasi perkantoran yang paling umum digunakan untuk membuat dokumen teks seperti surat atau laporan adalah...",
+                options: ["Microsoft Excel", "Microsoft PowerPoint", "Microsoft Word", "Adobe Photoshop"],
+                answer: "Microsoft Word"
+            },
+            {
+                question: "Fitur 'Mail Merge' di Microsoft Word berguna untuk...",
+                options: ["Membuat grafik dan diagram", "Menggabungkan beberapa dokumen menjadi satu", "Membuat surat atau email massal dengan data dari spreadsheet", "Memeriksa ejaan dan tata bahasa"],
+                answer: "Membuat surat atau email massal dengan data dari spreadsheet"
+            },
+             {
+                question: "Aplikasi yang digunakan untuk membuat bahan presentasi dengan slide adalah...",
+                options: ["Microsoft Word", "Microsoft Excel", "Microsoft PowerPoint", "Google Chrome"],
+                answer: "Microsoft PowerPoint"
+            },
+            {
+                question: "Apa platform yang memungkinkan pengguna untuk mempublikasikan tulisan dalam format entri kronologis?",
+                options: ["Vlog", "Podcast", "Blog", "Surel"],
+                answer: "Blog"
+            },
+            {
+                question: "Konten video yang diunggah secara rutin di platform seperti YouTube disebut...",
+                options: ["Blog", "Artikel", "Vlog", "Infografis"],
+                answer: "Vlog"
+            },
+            {
+                question: "Untuk mencari informasi tentang 'resep kue' tetapi tidak ingin hasil dari situs 'Wikipedia', query pencarian yang tepat adalah...",
+                options: ["resep kue AND wikipedia", "resep kue OR wikipedia", "\"resep kue\" NOT wikipedia", "resep kue -wikipedia"],
+                answer: "resep kue -wikipedia"
+            },
+            {
+                question: "Elemen visual seperti gambar, grafik, dan video penting dalam konten digital karena...",
+                options: ["Membuat halaman lebih berat dimuat", "Meningkatkan keterlibatan dan pemahaman audiens", "Hanya untuk tujuan estetika", "Mengurangi jumlah teks yang perlu ditulis"],
+                answer: "Meningkatkan keterlibatan dan pemahaman audiens"
+            },
+            {
+                question: "Apa langkah pertama yang paling penting sebelum mulai membuat konten untuk blog atau vlog?",
+                options: ["Membeli kamera mahal", "Menentukan target audiens dan topik", "Membuat jadwal posting yang ketat", "Mempromosikan di media sosial"],
+                answer: "Menentukan target audiens dan topik"
+            }
+        ];
+
+        // --- EVENT LISTENERS ---
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+        navLinks.forEach(link => link.addEventListener('click', handleNavLinkClick));
+        menuCards.forEach(card => card.addEventListener('click', () => showPage(card.dataset.target)));
+        submenuToggles.forEach(toggle => toggle.addEventListener('click', handleSubmenuToggle));
+        formRegistrasi.addEventListener('submit', startQuiz);
+        nextBtn.addEventListener('click', handleNextQuestion);
+        ulangKuisBtn.addEventListener('click', resetQuiz);
+        lihatPeringkatBtn.addEventListener('click', () => showPage('peringkat'));
+
+        // --- FUNCTIONS ---
+        function handleNavLinkClick(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            showPage(targetId);
+            if (window.innerWidth <= 768 && !sidebar.classList.contains('collapsed')) {
+                toggleSidebar();
+            }
+        }
+
+        function handleSubmenuToggle() {
+            this.classList.toggle('open');
+            const submenu = this.nextElementSibling;
+            submenu.style.maxHeight = submenu.style.maxHeight ? null : submenu.scrollHeight + "px";
+        }
+
+        function toggleSidebar() {
+            const isCollapsing = !sidebar.classList.contains('collapsed');
+            sidebar.classList.toggle('collapsed', isCollapsing);
+            mainContent.classList.toggle('full-width', isCollapsing);
+            header.classList.toggle('full-width', isCollapsing);
+            if (window.innerWidth <= 768) {
+                overlay.classList.toggle('active', !isCollapsing);
+                sidebar.style.transform = isCollapsing ? 'translateX(-100%)' : 'translateX(0)';
+            }
+        }
+
+        function showPage(id) {
+            pages.forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(id);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                const activeLink = document.querySelector(`.nav-link[href="#${id}"]`);
+                const title = activeLink ? activeLink.textContent.trim() : 'Beranda';
+                pageTitle.textContent = title;
+                navLinks.forEach(link => link.classList.remove('active'));
+                if (activeLink) activeLink.classList.add('active');
+                else document.querySelector('.nav-link[href="#beranda"]').classList.add('active');
+                if (id === 'peringkat') fetchLeaderboard();
+                if (id.startsWith('game')) initializeGames();
+            }
+        }
+
+        // --- KUIS FUNCTIONS ---
+        function startQuiz(e) {
+            e.preventDefault();
+            const token = document.getElementById('token').value;
+            if (token !== '1234') {
+                alert('Token salah! Silakan coba lagi.');
+                return;
+            }
+            userData = { nama: document.getElementById('nama').value, kelas: document.getElementById('kelas').value };
+            kuisRegistrasi.style.display = 'none';
+            kuisContainer.style.display = 'block';
+            startTimer();
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            questionText.textContent = question.question;
+            optionsContainer.innerHTML = '';
+            question.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'option-btn';
+                button.onclick = () => selectOption(button, option);
+                optionsContainer.appendChild(button);
+            });
+            updateProgressBar();
+        }
+        
+        function selectOption(button, selectedOption) {
+            optionsContainer.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            userAnswers[currentQuestionIndex] = selectedOption;
+        }
+
+        function handleNextQuestion() {
+            const selectedOption = userAnswers[currentQuestionIndex];
+            if (selectedOption === undefined) {
+                alert("Silakan pilih jawaban terlebih dahulu.");
+                return;
+            }
+            if (selectedOption === questions[currentQuestionIndex].answer) {
+                score += 10;
+            }
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                displayQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            clearInterval(timer);
+            kuisContainer.style.display = 'none';
+            kuisHasil.style.display = 'block';
+            document.getElementById('hasil-nama').textContent = userData.nama;
+            document.getElementById('hasil-skor').textContent = score;
+            saveScoreToSheet();
+        }
+
+        function saveScoreToSheet() {
+            const formData = new FormData();
+            formData.append('nama', userData.nama);
+            formData.append('kelas', userData.kelas);
+            formData.append('skor', score);
+            fetch(SCRIPT_URL, { method: 'POST', body: formData })
+                .then(res => res.json()).then(data => console.log('Score saved:', data))
+                .catch(error => console.error('Error saving score:', error));
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 120;
+            userAnswers = [];
+            kuisHasil.style.display = 'none';
+            kuisRegistrasi.style.display = 'block';
+            formRegistrasi.reset();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                if (timeLeft <= 0) endQuiz();
+            }, 1000);
+        }
+
+        function updateProgressBar() {
+            progressBar.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+        }
+
+        // --- LEADERBOARD FUNCTIONS ---
+        function fetchLeaderboard() {
+            const leaderboardBody = document.getElementById('leaderboard-body');
+            const podiumContainer = document.getElementById('podium-container');
+            leaderboardBody.innerHTML = '<tr><td colspan="4">Memuat data...</td></tr>';
+            podiumContainer.innerHTML = '';
+            fetch(SCRIPT_URL)
+                .then(response => response.json())
+                .then(data => {
+                    const sortedData = data.sort((a, b) => b.Skor - a.Skor || new Date(a.Timestamp) - new Date(b.Timestamp));
+                    const top3 = sortedData.slice(0, 3);
+                    podiumContainer.innerHTML = top3.map((p, i) => `
+                        <div class="podium-item rank-${i+1}">
+                            <div class="rank">${i+1}</div>
+                            <div class="name">${p.Nama}</div>
+                            <div class="score">${p.Skor}</div>
+                            <div class="bar"></div>
+                        </div>`).join('');
+                    leaderboardBody.innerHTML = sortedData.map((p, i) => `
+                        <tr>
+                            <td>${i + 1}</td>
+                            <td>${p.Nama}</td>
+                            <td>${p.Kelas}</td>
+                            <td>${p.Skor}</td>
+                        </tr>`).join('');
+                })
+                .catch(error => {
+                    console.error('Error fetching leaderboard:', error);
+                    leaderboardBody.innerHTML = '<tr><td colspan="4">Gagal memuat data.</td></tr>';
+                });
+        }
+        
+        // --- GAME FUNCTIONS ---
+        let gamesInitialized = false;
+        function initializeGames() {
+            if (gamesInitialized) return;
+            setupGame1();
+            setupGame2();
+            setupGame3();
+            gamesInitialized = true;
+        }
+
+        // Game 1: Search Query Builder
+        const game1Data = [
+            { question: "Cari informasi tentang 'sejarah komputer' tapi kecualikan hasil dari wikipedia.", answer: "sejarah komputer -wikipedia", blocks: ["-wikipedia", "sejarah", "komputer"] },
+            { question: "Cari artikel yang mengandung frasa persis 'algoritma pemrograman'.", answer: "\"algoritma pemrograman\"", blocks: ["\"", "algoritma pemrograman", "\""] },
+            { question: "Cari resep kue cokelat atau kue keju.", answer: "resep kue cokelat OR keju", blocks: ["resep", "keju", "OR", "kue", "cokelat"] }
+        ];
+        let currentGame1Index = 0;
+        function setupGame1() {
+            const searchBar = document.getElementById('game1-search-bar');
+            const blocksContainer = document.getElementById('game1-blocks-container');
+            const checkBtn = document.getElementById('game1-check-btn');
+            const nextBtn = document.getElementById('game1-next-btn');
+
+            function loadGame1Question() {
+                const current = game1Data[currentGame1Index];
+                document.getElementById('game1-question').textContent = current.question;
+                searchBar.innerHTML = '';
+                blocksContainer.innerHTML = '';
+                document.getElementById('game1-feedback').textContent = '';
+                checkBtn.style.display = 'inline-block';
+                nextBtn.style.display = 'none';
+
+                // Simple shuffle
+                current.blocks.sort(() => Math.random() - 0.5).forEach(text => {
+                    const block = document.createElement('div');
+                    block.textContent = text;
+                    block.className = 'draggable-block';
+                    block.onclick = () => {
+                       searchBar.appendChild(block);
+                    };
+                    blocksContainer.appendChild(block);
+                });
+                 searchBar.onclick = (e) => {
+                    if(e.target.classList.contains('draggable-block')) {
+                        blocksContainer.appendChild(e.target);
+                    }
+                }
+            }
+
+            checkBtn.addEventListener('click', () => {
+                const isExactPhraseQuestion = game1Data[currentGame1Index].answer.includes('"');
+                let userAnswer;
+                if (isExactPhraseQuestion) {
+                    // For phrase question, join without spaces between quotes and text
+                    userAnswer = Array.from(searchBar.children).map(b => b.textContent).join('');
+                } else {
+                    // For other questions, join with spaces
+                    userAnswer = Array.from(searchBar.children).map(b => b.textContent).join(' ');
+                }
+
+                const feedbackEl = document.getElementById('game1-feedback');
+                if (userAnswer === game1Data[currentGame1Index].answer) {
+                    feedbackEl.textContent = "Benar! Kueri yang kamu buat tepat.";
+                    feedbackEl.className = "feedback correct";
+                    checkBtn.style.display = 'none';
+                    nextBtn.style.display = 'inline-block';
+                } else {
+                    feedbackEl.textContent = "Kurang tepat. Coba susun lagi urutannya.";
+                    feedbackEl.className = "feedback incorrect";
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentGame1Index = (currentGame1Index + 1) % game1Data.length;
+                loadGame1Question();
+            });
+
+            loadGame1Question();
+        }
+
+        // Game 2: Shortcut Quiz
+        const game2Data = [
+            { question: "Untuk menebalkan teks (Bold) di Microsoft Word.", answer: "Ctrl + B", options: ["Ctrl + I", "Ctrl + B", "Ctrl + U"] },
+            { question: "Untuk menyimpan dokumen (Save).", answer: "Ctrl + S", options: ["Ctrl + P", "Ctrl + C", "Ctrl + S"] },
+            { question: "Untuk menyalin teks (Copy).", answer: "Ctrl + C", options: ["Ctrl + C", "Ctrl + V", "Ctrl + X"] },
+            { question: "Untuk memulai presentasi dari awal di PowerPoint.", answer: "F5", options: ["F1", "F5", "Esc"] }
+        ];
+        let currentGame2Index = 0;
+        function setupGame2() {
+            const questionEl = document.getElementById('game2-question');
+            const optionsEl = document.getElementById('game2-options');
+            const feedbackEl = document.getElementById('game2-feedback');
+
+            function loadGame2Question() {
+                const current = game2Data[currentGame2Index];
+                questionEl.textContent = current.question;
+                optionsEl.innerHTML = '';
+                feedbackEl.textContent = '';
+                current.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.textContent = opt;
+                    btn.className = 'option-btn';
+                    btn.onclick = () => checkGame2Answer(opt === current.answer);
+                    optionsEl.appendChild(btn);
+                });
+            }
+
+            function checkGame2Answer(isCorrect) {
+                if (isCorrect) {
+                    feedbackEl.textContent = "Tepat! Kamu jagoan shortcut!";
+                    feedbackEl.className = "feedback correct";
+                    setTimeout(() => {
+                        currentGame2Index = (currentGame2Index + 1) % game2Data.length;
+                        loadGame2Question();
+                    }, 1500);
+                } else {
+                    feedbackEl.textContent = "Oops, itu bukan shortcut yang tepat. Coba lagi!";
+                    feedbackEl.className = "feedback incorrect";
+                }
+            }
+            loadGame2Question();
+        }
+
+        // Game 3: Content Creator Simulator
+        const game3Data = [
+            {
+                scenario: "Kamu ingin membuat vlog review smartphone. Judul mana yang paling menarik?",
+                choices: [
+                    { text: "REVIEW HP BARU!", feedback: "Kurang spesifik. Penonton tidak tahu HP apa yang kamu review." },
+                    { text: "Unboxing & Review Jujur Samsung Galaxy S25: Kameranya Gila!", feedback: "Bagus! Judul ini spesifik, menarik, dan memberi tahu apa isi videonya.", correct: true },
+                    { text: "Video Smartphone", feedback: "Terlalu umum dan tidak menarik sama sekali." }
+                ]
+            },
+            {
+                scenario: "Sekarang pilih thumbnail untuk vlog-mu. Mana yang paling efektif?",
+                choices: [
+                    { text: "Gambar kotak HP saja.", feedback: "Membosankan. Thumbnail harus menunjukkan sesuatu yang menarik." },
+                    { text: "Foto selfie kamu dengan wajah kaget + gambar HP + tulisan 'WAJIB NONTON!'.", feedback: "Sangat baik! Thumbnail ini menggunakan emosi, menunjukkan produk, dan ada ajakan (call to action).", correct: true },
+                    { text: "Screenshot dari video tanpa editan.", feedback: "Tidak profesional dan kurang menarik perhatian." }
+                ]
+            },
+            {
+                scenario: "Bagaimana kamu akan memulai videomu?",
+                choices: [
+                    { text: "Langsung ke intinya: 'Oke, ini dia Samsung S25, mari kita buka kotaknya!'", feedback: "Efektif! Penonton sekarang suka video yang langsung ke topik tanpa basa-basi.", correct: true },
+                    { text: "'Halo teman-teman, jangan lupa subscribe ya...' selama 30 detik.", feedback: "Kurang bagus. Penonton bisa bosan dan menutup video sebelum kamu mulai review." },
+                    { text: "Membacakan semua spesifikasi teknis dari website.", feedback: "Terlalu teknis dan membosankan untuk pembukaan. Simpan detail itu untuk nanti." }
+                ]
+            }
+        ];
+        let currentGame3Index = 0;
+        function setupGame3() {
+            const scenarioEl = document.getElementById('game3-scenario-text');
+            const choicesEl = document.getElementById('game3-choices');
+            const feedbackEl = document.getElementById('game3-feedback');
+
+            function loadGame3Scenario() {
+                const current = game3Data[currentGame3Index];
+                scenarioEl.textContent = current.scenario;
+                choicesEl.innerHTML = '';
+                feedbackEl.textContent = '';
+                current.choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.textContent = choice.text;
+                    btn.className = 'choice-btn';
+                    btn.onclick = () => showGame3Feedback(choice);
+                    choicesEl.appendChild(btn);
+                });
+            }
+
+            function showGame3Feedback(choice) {
+                feedbackEl.textContent = choice.feedback;
+                feedbackEl.className = choice.correct ? "feedback correct" : "feedback incorrect";
+                if (choice.correct) {
+                    setTimeout(() => {
+                        currentGame3Index = (currentGame3Index + 1) % game3Data.length;
+                        loadGame3Scenario();
+                    }, 2500);
+                }
+            }
+            loadGame3Scenario();
+        }
+
+
+        // --- INITIAL SETUP ---
+        showPage('beranda');
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.style.transform = '';
+                const isCollapsed = sidebar.classList.contains('collapsed');
+                mainContent.classList.toggle('full-width', isCollapsed);
+                header.classList.toggle('full-width', isCollapsed);
+            } else {
+                 sidebar.classList.add('collapsed');
+                 mainContent.classList.add('full-width');
+                 header.classList.add('full-width');
+                 sidebar.style.transform = 'translateX(-100%)';
+            }
+        });
+        window.dispatchEvent(new Event('resize'));
+    });
+    </script>
+</body>
+</html>
